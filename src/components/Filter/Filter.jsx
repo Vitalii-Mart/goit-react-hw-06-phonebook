@@ -14,6 +14,7 @@ const Filter = () => {
       </Label>
       <Input
         type="text"
+        id="find"
         onChange={e => dispatch(filterContact(e.target.value.toLowerCase()))}
       />
     </>
