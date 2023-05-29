@@ -1,26 +1,27 @@
 import React from 'react';
 import { useDispatch } from 'react-redux';
+import { filterContact } from 'redux/contactsSlice';
 import PropTypes from 'prop-types';
 import { Label, Input } from './Filter.styled';
-import { filterContact } from '../../redux/contactsSlice';
 
-const Filter = ({ value }) => {
+const Filter = () => {
   const dispatch = useDispatch();
-
-  const handleChange = e => {
-    dispatch(filterContact(e.currentTarget.value));
-  };
 
   return (
     <>
-      <Label>Find contacts by name</Label>
-      <Input type="text" value={value} onChange={handleChange} />
+      <Label htmlFor="find">
+        Find contacts by name
+      </Label>
+      <Input
+        type="text"
+        onChange={e => dispatch(filterContact(e.target.value.toLowerCase()))}
+      />
     </>
   );
-};
+}
 
-// Filter.propTypes = {
-//   value: PropTypes.string,
-// };
+Filter.propTypes = {
+  onChange: PropTypes.func,
+};
 
 export default Filter;
