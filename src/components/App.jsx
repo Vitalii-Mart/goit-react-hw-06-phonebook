@@ -1,61 +1,47 @@
-import React, { useState, useEffect } from 'react';
-import shortid from 'shortid';
+import React, { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { addContact, deleteContact } from '../redux/contactsSlice';
 import { Section, Title } from './App.styled';
 import ContactForm from './ContactForm';
 import ContactList from './ContactList';
 import Filter from './Filter';
+import shortid from 'shortid';
 
 const App = () => {
-  const [contacts, setContacts] = useState(
-    JSON.parse(localStorage.getItem('contacts')) ?? []
-  );
-  const [filter, setFilter] = useState('');
+  const dispatch = useDispatch();
+  const contacts = useSelector(state => state.contacts.contacts);
+  const filter = useSelector(state => state.contacts.filter);
 
   useEffect(() => {
     localStorage.setItem('contacts', JSON.stringify(contacts));
   }, [contacts]);
 
-  const addContact = ({ name, number }) => {
-    if (
-      contacts.some(
-        contact => contact.name.toLowerCase() === name.toLowerCase()
-      )
-    ) {
+  const handleAddContact = ({ name, number }) => {
+    if (contacts.some(contact => contact.name.toLowerCase() === name.toLowerCase())) {
       alert(`${name} is already in contacts.`);
     } else {
-      const cont = {
-        id: shortid.generate(),
-        name,
-        number,
-      };
-      setContacts(prevContacts => [cont, ...prevContacts]);
+      dispatch(addContact({ id: shortid.generate(), name, number }));
     }
   };
 
-  const changeFiltar = e => {
-    setFilter(e.currentTarget.value);
+
+  const getFilteredContacts = () => {
+    const normalizedFilter = filter.toLowerCase();
+    return contacts.filter(contact => contact.name.toLowerCase().includes(normalizedFilter));
   };
 
-  const getFilter = () => {
-    const normalFiltar = filter.toLowerCase();
-
-    return contacts.filter(cont =>
-      cont.name.toLowerCase().includes(normalFiltar)
-    );
-  };
-
-  const onDeleteContact = contactId => {
-    setContacts(cont => cont.filter(({ id }) => id !== contactId));
+  const handleDeleteContact = contactId => {
+    dispatch(deleteContact(contactId));
   };
 
   return (
     <Section>
       <Title>Phonebook</Title>
-      <ContactForm addContact={addContact} />
+      <ContactForm addContact={handleAddContact} />
 
       <Title>Contacts</Title>
-      <Filter onChange={changeFiltar} value={filter} />
-      <ContactList contacts={getFilter()} onDeleteContact={onDeleteContact} />
+      <Filter value={filter} />
+      <ContactList contacts={getFilteredContacts()} onDeleteContact={handleDeleteContact} />
     </Section>
   );
 };

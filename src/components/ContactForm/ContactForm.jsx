@@ -2,10 +2,14 @@ import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { Form, Input, Button, Label } from './ContactForm.styled';
 import shortid from 'shortid';
+import { useDispatch } from 'react-redux';
+import { addContact } from '../../redux/contactsSlice';
 
-const ContactForm = ({ addContact }) => {
+const ContactForm = () => {
   const [name, setName] = useState('');
   const [number, setNumber] = useState('');
+
+  const dispatch = useDispatch();
 
   const nameInputId = shortid.generate();
   const numberInputId = shortid.generate();
@@ -21,9 +25,15 @@ const ContactForm = ({ addContact }) => {
 
   const handleSubmit = e => {
     e.preventDefault();
-    addContact({ name, number });
+    const newContact = {
+      id: shortid.generate(),
+      name,
+      number,
+    };
+    dispatch(addContact(newContact));
     reset();
   };
+
   const reset = () => {
     setName('');
     setNumber('');
@@ -32,7 +42,7 @@ const ContactForm = ({ addContact }) => {
   return (
     <>
       <Form onSubmit={handleSubmit}>
-        <Label>Name</Label>
+        <Label htmlFor={nameInputId}>Name</Label>
         <Input
           type="text"
           value={name}
@@ -43,7 +53,7 @@ const ContactForm = ({ addContact }) => {
           title="Name may contain only letters, apostrophe, dash and spaces. For example Adrian, Jacob Mercer, Charles de Batz de Castelmore d'Artagnan"
           required
         />
-        <Label>Number</Label>
+        <Label htmlFor={numberInputId}>Number</Label>
         <Input
           type="tel"
           value={number}

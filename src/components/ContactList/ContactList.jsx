@@ -1,27 +1,18 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { List, Total } from './ContactList.styled';
+import ElemContactList from '../ElemContactList';
 
-import ElemContactList from 'components/ElemContactList';
-
-const ContactList = ({ contacts, onDeleteContact }) => {
+const ContactList = ({ contacts }) => {
   return (
     <List>
       <Total>Total contacts: {contacts.length}</Total>
       {contacts.map(({ id, name, number }) => (
-        <ElemContactList
-          key={id}
-          id={id}
-          name={name}
-          number={number}
-          onDeleteContact={onDeleteContact}
-        />
+        <ElemContactList key={id} id={id} name={name} number={number} />
       ))}
     </List>
   );
 };
-
-export default ContactList;
 
 ContactList.propTypes = {
   contacts: PropTypes.arrayOf(
@@ -31,5 +22,6 @@ ContactList.propTypes = {
       number: PropTypes.string.isRequired,
     })
   ).isRequired,
-  onDeleteContact: PropTypes.func.isRequired,
 };
+
+export default ContactList;
