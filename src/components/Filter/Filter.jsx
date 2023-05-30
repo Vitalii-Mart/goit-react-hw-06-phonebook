@@ -1,12 +1,12 @@
 import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { filterContact, selectFilter } from '../../redux/contactsSlice';
+import { filterContact  } from '../../redux/contactsSlice';
 import PropTypes from 'prop-types';
 import { Label, Input } from './Filter.styled';
 
 const Filter = () => {
   const dispatch = useDispatch();
-  const filter = useSelector(selectFilter);
+  const filter = useSelector(state => state.filter);
 
   const handleFilterChange = (event) => {
     const value = event.target.value.toLowerCase();
@@ -20,7 +20,7 @@ const Filter = () => {
         type="text"
         id="find"
         name="filter"
-        value={filter !== undefined ? filter : ''}
+        value={filter}
         onChange={handleFilterChange}
       />
     </>
