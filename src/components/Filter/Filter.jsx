@@ -20,7 +20,7 @@ const Filter = () => {
         type="text"
         id="find"
         name="filter"
-        // value={filter !== undefined ? filter : ''}
+        value={filter !== undefined ? filter : ''}
         onChange={handleFilterChange}
       />
     </>
